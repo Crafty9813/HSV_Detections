@@ -15,14 +15,14 @@ def detect_color(frame, lower_hsv, upper_hsv):
 
         midPoint = ((thing[1].min()+thing[1].max())//2, (thing[0].min() + thing[0].max()) // 2)
         color = (0, 0, 255) 
-        cv2.circle(img, midPoint, 5, color, 2)
+        cv2.circle(img, midPoint, 7, color, 2)
 
     return img
 
 if __name__ == "__main__":
     #color range (HSV)
-    lower_blue = np.array([120, 100, 50])  # change for diff color
-    upper_blue = np.array([160, 255, 255]) #BLUE
+    lower_purple = np.array([120, 100, 50])  # change for diff color
+    upper_purple = np.array([160, 255, 255]) #purple
 
     cap = cv2.VideoCapture(0)
 
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         if not ret:
             break
 
-        result = detect_color(frame, lower_blue, upper_blue)
+        result = detect_color(frame, lower_purple, upper_purple)
 
         cv2.imshow('original', frame)
         cv2.imshow('result', result)
