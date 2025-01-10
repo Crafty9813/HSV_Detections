@@ -7,22 +7,30 @@ def detect_color(frame, lower_hsv, upper_hsv):
     mask = cv2.inRange(hsv, lower_hsv, upper_hsv)
     thing = np.where(mask > 0)
 
+    kernel = np.ones((5, 5), np.uint8) 
+
     img = cv2.bitwise_and(frame, frame, mask=mask)
+    img = cv2.erode(img, kernel, iterations=1) 
+    img = cv2.dilate(img, kernel, iterations=1) 
+    img = cv2.Canny(img, 40, 180) 
 
     if len(thing) > 0 and len(thing[1]):
         print(thing[0].min(), thing[0].max())
         print(thing[1].min(), thing[1].max()) 
 
         midPoint = ((thing[1].min()+thing[1].max())//2, (thing[0].min() + thing[0].max()) // 2)
+        midPoint2 = (int(thing[1].mean()), int(thing[0].mean()))
         color = (0, 0, 255) 
+        color2 = (0, 255, 255)
         cv2.circle(img, midPoint, 7, color, 2)
+        cv2.circle(img, midPoint2, 12, color2, 2)
 
     return img
 
 if __name__ == "__main__":
-    #color range (HSV)
-    lower_purple = np.array([120, 100, 50])  # change for diff color
-    upper_purple = np.array([160, 255, 255]) #purple
+    #color range (opencv HSV)
+    lower_ball = np.array([78, 130, 90])
+    upper_ball = np.array([84, 255, 255])
 
     cap = cv2.VideoCapture(0)
 
@@ -32,7 +40,7 @@ if __name__ == "__main__":
         if not ret:
             break
 
-        result = detect_color(frame, lower_purple, upper_purple)
+        result = detect_color(frame, lower_ball, upper_ball)
 
         cv2.imshow('original', frame)
         cv2.imshow('result', result)
